@@ -1,5 +1,5 @@
 # CSA0919 – Programming in Java
-## Assignment 5 – Part A: Persistence Design & Pseudocode
+## Assignment 5 – Part B: Implementation & Experimental Investigation
 
 ### Student Details
 
@@ -10,253 +10,496 @@
 | **Course Code** | CSA0919 |
 | **Course Name** | Programming in Java |
 | **Assignment** | Assignment 5 |
-| **Part** | Part A – Persistence Design & Pseudocode |
+| **Part** | Part B – Implementation & Experimental Investigation |
 | **Programming Language** | Java |
 
 ---
 
 ## 1. Introduction
 
-Part A of Assignment 5 focuses on persistence design, file handling, data-access architecture, object serialization and database transaction safety using Java.
+Part B of Assignment 5 focuses on implementing, testing and experimentally investigating persistence mechanisms and database operations using Java.
 
-The tasks emphasise designing reliable and efficient mechanisms for storing, retrieving and managing application data. They explore different file formats, buffered reading techniques, Data Access Object (DAO) patterns, Java serialization and safe database transactions.
+This part builds upon the file-storage and database-design concepts introduced in Part A. It involves developing practical file-processing applications, validating adversarial inputs, comparing JDBC execution techniques and making engineering decisions based on experimental observations.
 
-This part consists of five tasks that progressively develop the understanding of persistence mechanisms, data-access design and database safety.
-
-The primary deliverables are analytical reports, algorithmic pseudocode and design documentation rather than complete executable Java applications.
+The four tasks progressively cover file-store implementation, data validation, SQL injection testing, JDBC performance benchmarking, batch processing and large-scale database migration.
 
 ## 2. Objectives
 
-- Understand different file formats for persistent data storage.
-- Design structured text and binary file representations.
-- Develop pseudocode for file operations.
-- Analyse efficient file-reading techniques.
-- Understand buffering and memory utilisation.
-- Identify repeated JDBC operations and design reusable DAO components.
-- Understand object serialization and deserialization.
-- Identify transient and persistent object fields.
-- Analyse serialVersionUID and serialization compatibility.
-- Design reliable database transactions.
-- Understand commit and rollback operations.
-- Identify SQL injection vulnerabilities.
-- Apply PreparedStatement for secure database operations.
-- Compare alternative persistence approaches using time and space complexity.
+- Implement persistent file storage using Java.
+- Develop efficient file-reading and searching mechanisms.
+- Instrument file operations and record experimental measurements.
+- Validate records and handle damaged input files.
+- Demonstrate SQL injection vulnerabilities using controlled test inputs.
+- Prevent SQL injection using PreparedStatement.
+- Compare Statement, PreparedStatement and batch execution.
+- Understand JDBC transactions and auto-commit behaviour.
+- Perform database insertion and retrieval operations.
+- Collect benchmark results for different dataset sizes.
+- Examine database metadata and schema information.
+- Design reliable bulk-data migration procedures.
+- Analyse correctness, performance, scalability and data safety.
+- Make engineering decisions based on implementation and experimental evidence.
 
 ## 3. Task-wise Description
 
-### Task A1 – Design a File Format
+### Task B1 – Implement and Instrument the File Store
 
-**Problem context:** Transport Office Bus-Pass Records.
+**Problem context:** Transport Office Bus-Pass Record Management.
 
-Designed a structured persistence format for maintaining bus-pass records in a transport office system.
+Implemented a file-based persistence system for storing and managing bus-pass records.
 
-The task defines a seven-field bus-pass record and explores both UTF-8 comma-delimited text storage and binary storage using DataOutputStream.
+The task develops the file-store operations and instruments their performance to investigate the effect of different reading and searching strategies.
 
-Pseudocode was developed for adding a pass, finding a pass using its ID and listing passes based on their route.
-
-The design also considers damaged records, missing files, incomplete writes and alternative fixed-length records using RandomAccessFile.
+The implementation includes validation and benchmarking programs to examine file-processing behaviour under different workloads.
 
 **Concepts covered:**
 - File handling
-- Text-file persistence
-- Binary-file persistence
-- UTF-8 encoding
-- CSV-style record representation
-- DataOutputStream
-- Record structure
-- File validation
-- Error handling
-- Algorithmic pseudocode
-- RandomAccessFile
+- Persistent storage
+- Text-file processing
+- Record management
+- File input and output
+- Buffered reading
+- Record searching
+- Input validation
+- Performance instrumentation
+- Benchmarking
+- CSV-based measurements
 - Time and space complexity
 
 **Files included:**
-- `Assignment5_PartA_TaskA1_Report.pdf` – Detailed report containing the file-format design, analysis and pseudocode.
-- `TaskA1_Pseudocode.txt` – Plain-text algorithms for adding, finding and listing bus passes.
+- `PassStore.java` – Bus-pass file-store implementation.
+- `B1Validation.java` – Validation implementation and tests.
+- `LineCounterBenchmark.java` – Line-counting performance benchmark.
+- `SearchGrowthBenchmark.java` – Search-performance growth benchmark.
+- `Assignment5_PartB_B1_Report.pdf` – Detailed implementation and experimental report.
+- `PassStore_output.txt` – File-store execution output.
+- `B1Validation_output.txt` – Validation execution output.
+- `buffering_benchmark.txt` – Buffering benchmark results.
+- `search_growth_benchmark.txt` – Search-growth benchmark results.
+- `measurements.csv` – Experimental measurements.
 
-**Result:** A seven-field bus-pass record format was designed using text and binary representations. The algorithms for adding, searching and listing records were documented, along with error-handling strategies and alternative storage approaches.
+**Execution commands:**
 
-**Implementation requirement:** This is a design and pseudocode task. A complete Java implementation is not required.
+Compile the Java source files:
 
-### Task A2 – Don't Read What You Don't Need
+```bash
+javac PassStore.java B1Validation.java LineCounterBenchmark.java SearchGrowthBenchmark.java
+```
 
-**Problem context:** Large Attendance Log Processing.
+Run the file-store application:
 
-Analysed the performance of reading a large 50 MB attendance log one byte at a time.
+```bash
+java PassStore
+```
 
-Designed a more efficient buffered input approach and compared it with loading the entire file into memory using Files.readAllLines().
+Run validation:
 
-The task examines how buffering reduces unnecessary I/O operations and how memory usage changes with different reading strategies.
+```bash
+java B1Validation
+```
 
-**Concepts covered:**
-- File input and output
-- Buffered reading
-- InputStream
-- Buffering
-- File processing
-- Memory efficiency
-- I/O performance
-- Files.readAllLines()
-- Time complexity
-- Space complexity
-- Algorithmic pseudocode
+Run the line-counting benchmark:
 
-**Files included:**
-- `Assignment5_PartA_TaskA2_Report.pdf` – Detailed report covering the original approach, redesigned approach and complexity analysis.
-- `TaskA2_Pseudocode.txt` – Plain-text buffered line-counter algorithm.
+```bash
+java LineCounterBenchmark
+```
 
-**Result:** A buffered reading strategy was proposed to process the attendance log more efficiently. The design also explains when buffering may not provide significant benefits and compares streaming with full-file loading.
+Run the search-growth benchmark:
 
-**Implementation requirement:** No complete Java implementation or execution screenshot is required for this task. The main deliverables are design reasoning and pseudocode.
+```bash
+java SearchGrowthBenchmark
+```
 
-### Task A3 – Discover the Data-Access Design Pattern
+**Result:** The file-store implementation and supporting validation and benchmark programs provide a practical way to evaluate persistent bus-pass record management, buffering efficiency and search performance.
 
-**Problem context:** Student Database Management System.
+**Note:** Verify the individual programs' arguments and file-path requirements before execution. The repository includes prepared output and measurement files for reference.
 
-Analysed repeated JDBC operations in StudentDB, CourseDB and MarksDB and identified the common database-access logic.
+### Task B2 – Engineer an Adversarial Input
 
-Designed a reusable generic DAO interface to separate database operations from application-specific entity handling.
+**Problem context:** Bus-Pass Login Validation and Damaged Record Processing.
 
-The task also includes a StudentDao implementation example and a mapping between Student object fields and database table columns.
+Developed controlled tests to demonstrate SQL injection vulnerabilities in an unsafe login implementation and compare it with a secure PreparedStatement implementation.
+
+The task also examines damaged bus-pass records containing incorrect field counts, invalid numeric amounts and empty lines.
+
+The application validates the input records and continues processing after encountering invalid entries.
 
 **Concepts covered:**
 - JDBC
-- Data Access Object (DAO)
-- Generic interfaces
-- Java Generics
-- Database abstraction
-- Separation of concerns
-- CRUD operations
-- SQL queries
-- Entity-to-table mapping
-- Reusability
-- Maintainability
-- Design patterns
-- Alternative architecture analysis
-
-**Files included:**
-- `Assignment5_PartA_TaskA3_Report.pdf` – Detailed DAO design and analytical report.
-- `TaskA3_DAO_Design.txt` – Editable design containing the generic DAO interface, StudentDao example and database table mapping.
-
-**Result:** A generic DAO interface was designed to provide reusable data-access operations. The design separates database interaction from application and service logic, improving modularity, reusability and maintainability.
-
-**Implementation requirement:** This is a design task. The Java-style code snippets illustrate the DAO interface and implementation approach; a complete runnable application is not required.
-
-### Task A4 – What Should Be Serialized?
-
-**Problem context:** Hostel Management System.
-
-Designed a serialization strategy for storing hostel, room and resident information.
-
-The task identifies which fields should be persisted and which should be excluded from serialization. It also examines object-graph serialization, compatibility between class versions and alternative persistence formats such as CSV and JSON.
-
-**Concepts covered:**
-- Java serialization
-- Deserialization
-- Serializable interface
-- Object graphs
-- Transient variables
-- serialVersionUID
-- Serialization compatibility
-- InvalidClassException
-- Persistent and runtime data
-- CSV and JSON
-- Schema evolution
-- Time and space complexity
-
-**Files included:**
-- `Assignment5_PartA_TaskA4_Report.pdf` – Complete serialization design and analysis report.
-- `TaskA4_Serialization_Design.txt` – Editable notes covering transient fields, serialization, serialVersionUID and alternative formats.
-
-**Important design decisions:**
-
-- Persist Hostel and Room information.
-- Persist Resident name and registration number.
-- Mark Resident password as transient.
-- Mark live JDBC connection objects as transient.
-- Use an explicit serialVersionUID to support controlled class-version compatibility.
-- Consider CSV and JSON when portability and schema evolution are important.
-
-When a new `phoneNumber` field is introduced with a compatible serialVersionUID, an older serialized object that does not contain that field receives the default value `null`. An incompatible serialVersionUID can cause InvalidClassException.
-
-**Result:** A suitable serialization strategy was designed to preserve important application data while excluding sensitive credentials and runtime resources.
-
-**Implementation requirement:** This is a design and analysis task. A complete executable Java program is not required.
-
-### Task A5 – Design for Correctness and Safety
-
-**Problem context:** Hostel and Canteen Wallet Transaction System.
-
-Designed a safe database transaction for transferring ₹500 from a hostel wallet to a canteen wallet.
-
-The task uses JDBC-style pseudocode to demonstrate transaction management, commit and rollback operations.
-
-It also analyses SQL injection vulnerabilities caused by concatenating user input into SQL queries and redesigns the login operation using PreparedStatement.
-
-**Concepts covered:**
-- JDBC transactions
-- Transaction management
-- Auto-commit
-- Commit
-- Rollback
-- Database consistency
-- PreparedStatement
 - SQL injection
-- Parameterized queries
-- Input handling
-- Database constraints
+- Statement
+- PreparedStatement
+- Parameter binding
+- User-input validation
+- File handling
+- CSV record validation
 - Exception handling
+- Damaged-file processing
+- Error reporting
+- Database testing
 - Time and space complexity
 
 **Files included:**
-- `Assignment5_PartA_TaskA5_Report.pdf` – Detailed transaction-design and security analysis.
-- `TaskA5_Pseudocode.txt` – Editable transaction pseudocode, SQL injection explanation and complexity analysis.
+- `B2AdversarialTest.java` – JDBC login tests and damaged-file validation.
+- `B2DamagedFileTest.java` – Standalone damaged-file validation.
+- `Assignment5_PartB_B2_Report.pdf` – Detailed report and security analysis.
+- `create_test_database.sql` – Test database and account setup script.
+- `damaged_passes.csv` – Sample damaged bus-pass file.
+- `compile_check.txt` – Compilation-check information.
+- `expected_run.txt` – Reference execution transcript.
 
-**Transaction design:**
+**Requirements:**
+- JDK 11 or later.
+- H2 JDBC database driver for the login demonstration.
+- No external MySQL server is required for this task.
 
-1. Establish a database connection.
-2. Disable auto-commit.
-3. Verify the source and destination wallet records.
-4. Deduct ₹500 from the hostel wallet.
-5. Add ₹500 to the canteen wallet.
-6. Verify that each update affects exactly one wallet record.
-7. Commit the transaction if both updates succeed.
-8. Roll back if either update fails.
-9. Restore the original auto-commit setting.
+**Database setup:**
 
-**SQL injection prevention:**
+Download H2 version 2.3.232 and save the JAR as:
 
-The task explains how concatenating user input into SQL queries can create vulnerabilities.
+`lib/h2-2.3.232.jar`
 
-The redesigned login approach uses PreparedStatement placeholders and bound parameters instead of directly inserting user input into an SQL statement.
+Create the required output and data folders in Windows PowerShell:
 
-**Result:** A transaction-safe wallet-transfer design was developed using commit and rollback. A parameterized query approach was also designed to prevent SQL injection and improve database security.
+```powershell
+New-Item -ItemType Directory -Force output, data
+```
 
-**Implementation requirement:** This is a Part A design and pseudocode task. A complete Java application or execution screenshot is not required.
+**Compile and run the main demonstration:**
+
+```powershell
+javac -d output src\B2AdversarialTest.java
+java -cp "output;lib\h2-2.3.232.jar" B2AdversarialTest
+```
+
+**Run the standalone damaged-file test:**
+
+```powershell
+javac -d output src\B2DamagedFileTest.java
+java -cp output B2DamagedFileTest
+```
+
+**Adversarial login input:**
+
+```text
+' OR '1'='1' -- 
+```
+
+Wrong password:
+
+```text
+definitely-wrong
+```
+
+**Expected login results:**
+
+```text
+UNSAFE_LOGIN=true
+PREPARED_LOGIN=false
+VALID_LOGIN=true
+```
+
+The unsafe login demonstrates how concatenating untrusted input into an SQL statement can alter its condition. The PreparedStatement implementation binds the supplied input as a literal parameter.
+
+**Damaged-file test cases:**
+
+| Test case | Input condition | Expected behaviour |
+|---|---|---|
+| Valid record | Five valid fields | Accepted |
+| Wrong field count | Only four fields | Rejected |
+| Invalid amount | Non-numeric amount | Rejected |
+| Empty line | Blank record | Skipped |
+| Valid record after errors | Five valid fields | Accepted |
+
+Expected summary:
+
+- Valid rows accepted: 2
+- Wrong-field-count rows skipped: 1
+- Invalid-amount rows skipped: 1
+- Empty lines skipped: 1
+
+**Result:** SQL injection was demonstrated using a controlled login test. PreparedStatement prevented the supplied payload from changing the SQL query structure. The damaged-file validator also identified invalid records while continuing to process subsequent valid records.
+
+### Task B3 – Statement vs PreparedStatement vs Batch
+
+**Problem context:** Bus-Pass Database Insertion and Performance Benchmarking.
+
+Implemented and compared three JDBC database-insertion approaches: Statement, PreparedStatement and PreparedStatement batch execution.
+
+The task examines their execution performance with different numbers of bus-pass records and investigates transaction behaviour when an invalid record is encountered during batch processing.
+
+It also evaluates ResultSetMetaData to inspect database column names and data types.
+
+**Concepts covered:**
+- JDBC
+- Statement
+- PreparedStatement
+- Batch processing
+- addBatch()
+- executeBatch()
+- ResultSet
+- ResultSetMetaData
+- SQL insertion
+- Database transactions
+- Auto-commit
+- Commit and rollback
+- Exception handling
+- Performance benchmarking
+- Bulk data processing
+- Time and space complexity
+
+**Files included:**
+- `B3Runner.java` – Main JDBC experiments and performance measurements.
+- `PassLoader.java` – Completed transaction-based batch loader.
+- `Assignment5_PartB_B3_Report.pdf` – Detailed report and experimental analysis.
+- `create_database_and_table.sql` – MySQL database and table creation script.
+- `generated_data_notes.txt` – Generated data and failure-placement information.
+- `compile_check.txt` – Compilation-check information.
+
+**Requirements:**
+- Java 11 or later.
+- MySQL Server 8.x or compatible.
+- MySQL Connector/J JDBC driver.
+
+**Step 1 – Database setup**
+
+Execute:
+
+`create_database_and_table.sql`
+
+The script creates the `assignment5_b3` database and the `bus_pass` table.
+
+**Step 2 – Add MySQL Connector/J**
+
+Download the JDBC driver and place it inside the `lib` folder.
+
+Use the filename:
+
+`mysql-connector-j.jar`
+
+**Step 3 – Configure database credentials**
+
+For Windows PowerShell:
+
+```powershell
+$env:DB_URL="jdbc:mysql://localhost:3306/assignment5_b3"
+$env:DB_USER="root"
+$env:DB_PASSWORD="your_mysql_password"
+```
+
+Replace the password with your local MySQL password. Do not upload database credentials to GitHub.
+
+**Step 4 – Compile**
+
+```powershell
+New-Item -ItemType Directory -Force output
+
+javac -cp "lib\mysql-connector-j.jar" -d output src\PassLoader.java src\B3Runner.java
+```
+
+**Step 5 – Run**
+
+```powershell
+java -cp "output;lib\mysql-connector-j.jar" B3Runner
+```
+
+For Linux or macOS, use `:` instead of `;` in the classpath.
+
+**Experimental design:**
+
+The benchmark compares all three insertion approaches using:
+
+- 1,000 records.
+- 10,000 records.
+- 100,000 records.
+
+Each implementation is evaluated using insertion measurements and database row-count verification.
+
+**Transaction experiment:**
+
+An invalid amount is deliberately introduced at the start of batch 6.
+
+The task compares two approaches:
+
+1. Batch insertion with auto-commit enabled.
+2. Batch insertion inside a single transaction.
+
+Expected behaviour:
+
+- In auto-commit mode, the first five successful batches can remain committed, resulting in 5,000 rows.
+- In a single transaction, the failure should trigger rollback and leave zero inserted rows.
+
+**Result:** The task compares the performance and reliability of Statement, PreparedStatement and batch insertion. It demonstrates how transaction management affects data consistency when a database operation fails.
+
+**Engineering recommendation:**
+
+- For importing 100,000 records, PreparedStatement batching within a single transaction is recommended.
+- For inserting one bus pass at a counter, PreparedStatement with a single executeUpdate operation is suitable.
+- Statement is included as a comparison baseline rather than the preferred option for untrusted input.
+
+### Task B4 – Final Engineering Decision
+
+**Problem context:** Multi-Campus Bus-Pass Migration System.
+
+Developed a migration application that reads bus-pass records from a CSV file, validates them and inserts accepted records into a MySQL database.
+
+Rejected records are written into a separate validation-failure report containing their line numbers and rejection reasons.
+
+The application performs accepted-record insertion using PreparedStatement batches of 1,000 records within a single transaction.
+
+It also retrieves database and JDBC driver information using DatabaseMetaData.
+
+The task concludes by evaluating a suitable storage architecture for a production system operating across 12 campuses and multiple counters.
+
+**Concepts covered:**
+- Java file handling
+- CSV processing
+- Input validation
+- JDBC
+- PreparedStatement
+- Batch processing
+- Database transactions
+- Commit and rollback
+- DatabaseMetaData
+- MySQL
+- Primary keys
+- Composite keys
+- Database indexing
+- Bulk data migration
+- Fault handling
+- Production architecture
+- Performance analysis
+- Scalability and maintainability
+
+**Files included:**
+- `B4Migration.java` – Bus-pass migration implementation.
+- `Assignment5_PartB_B4_Report.pdf` – Final engineering decision and analysis report.
+- `create_database_and_table.sql` – Database and table creation script.
+- `passes_b4.csv` – Sample migration input file.
+- `README.md` – Execution and verification instructions.
+
+**Requirements:**
+- JDK 11 or later.
+- MySQL Server 8.x or compatible.
+- MySQL Connector/J JDBC driver.
+
+**Step 1 – Database setup**
+
+Execute:
+
+`create_database_and_table.sql`
+
+The database uses `(campus_code, pass_id)` as a composite primary key.
+
+This allows the same local pass ID to exist at different campuses while preventing duplicates within one campus.
+
+**Step 2 – Add JDBC driver**
+
+Place the MySQL Connector/J JAR inside the `lib` folder and name it:
+
+`mysql-connector-j.jar`
+
+**Step 3 – Configure database credentials**
+
+For Windows PowerShell:
+
+```powershell
+$env:DB_URL="jdbc:mysql://localhost:3306/assignment5_b4?useSSL=false&serverTimezone=UTC"
+$env:DB_USER="root"
+$env:DB_PASSWORD="your_mysql_password"
+```
+
+**Step 4 – Compile**
+
+```powershell
+New-Item -ItemType Directory -Force output
+
+javac -cp "lib\mysql-connector-j.jar" -d output src\B4Migration.java
+```
+
+**Step 5 – Run**
+
+```powershell
+java -cp "output;lib\mysql-connector-j.jar" B4Migration input\passes_b4.csv CAMPUS01
+```
+
+**Input format:**
+
+Each valid CSV record contains five fields:
+
+```text
+pass_id,reg_no,name,route_no,amount
+```
+
+The supplied sample includes valid records and deliberately invalid cases such as non-numeric route numbers, non-numeric amounts, negative amounts, missing fields and duplicate pass IDs.
+
+The current parser assumes commas are not embedded inside names. Records containing embedded commas require a proper CSV parser or an escaped and quoted format.
+
+**Expected validation results:**
+
+| Parameter | Expected count |
+|---|---:|
+| Total input lines | 16 |
+| Accepted records | 11 |
+| Rejected records | 5 |
+| Committed database records | 11 |
+
+**Database metadata:**
+
+The application uses DatabaseMetaData to display:
+
+- Database product name and version.
+- JDBC driver name and version.
+- Available database tables.
+
+**Transaction handling:**
+
+- Valid records are added using PreparedStatement batches.
+- All accepted records are inserted within one transaction.
+- Invalid input records are written to `output/validation_failures.csv`.
+- A database insertion failure triggers transaction rollback.
+- Partial imports are avoided.
+
+**Production engineering decision:**
+
+A shared relational database is recommended for a multi-campus bus-pass management system.
+
+The reasons include:
+
+- Transaction support for concurrent registration counters.
+- Index-based searches for registration numbers and routes.
+- Primary-key and integrity constraints.
+- Better multi-user data consistency.
+- Centralised backups and operational management.
+- Improved support for concurrent updates across campuses.
+
+Separate text files or serialized Java objects may be suitable for smaller standalone applications, but are less convenient for concurrent multi-campus operations and multi-criteria searching.
+
+**Result:** A database migration application was designed to validate incoming bus-pass records, process accepted records in batches, preserve transaction correctness and report database metadata. A shared relational database was selected as the production storage approach.
 
 ---
 
-## 4. Technologies and Concepts Used
+## 4. Technologies and Tools Used
 
-| Technology / Concept | Purpose |
+| Technology / Tool | Purpose |
 |---|---|
-| Java | Programming language and design context |
-| UTF-8 | Text-file encoding |
-| CSV-style format | Structured text persistence |
-| DataOutputStream | Binary record representation |
-| RandomAccessFile | Fixed-length record access |
-| Buffered Input | Efficient file reading |
-| Files API | File-processing alternatives |
-| JDBC | Database connectivity |
-| DAO Pattern | Data-access abstraction |
-| Java Generics | Reusable DAO interface |
-| Java Serialization | Object persistence |
-| Serializable | Supporting object serialization |
-| serialVersionUID | Serialization compatibility |
-| PreparedStatement | Safe parameterized SQL |
-| SQL | Database operations |
-| PDF Editor / Document Editor | Report preparation |
+| Java | Programming language |
+| JDK | Compilation and execution |
+| File I/O | Reading and processing persistent records |
+| CSV | Bus-pass input and experimental output |
+| JDBC | Java database connectivity |
+| H2 Database | Lightweight database for B2 testing |
+| MySQL | Database management for B3 and B4 |
+| MySQL Connector/J | Java-MySQL connectivity |
+| Statement | Standard SQL execution |
+| PreparedStatement | Parameterized SQL execution |
+| Batch Processing | Bulk database insertion |
+| DatabaseMetaData | Database and driver information |
+| SQL | Schema and database operations |
+| Visual Studio Code | Source-code development |
+| PowerShell / Command Prompt | Compilation and execution |
 | Git and GitHub | Version control and submission |
+| PDF Editor / Document Editor | Report preparation |
 
 ## 5. Repository Structure
 
@@ -265,96 +508,170 @@ CSA0919-192525148-Programming-in-Java-Assignments/
 │
 └── Assignment 5/
     │
-    └── PART A - Persistence Design & Pseudocode/
+    └── PART B – Implementation & Experimental Investigation/
         │
         ├── README.md
         │
-        ├── TASK A1 – DESIGN A FILE FORMAT/
+        ├── TASK B1 – IMPLEMENT AND INSTRUMENT THE FILE STORE/
         │   ├── README.md
-        │   ├── Assignment5_PartA_TaskA1_Report.pdf
-        │   └── TaskA1_Pseudocode.txt
+        │   ├── PassStore.java
+        │   ├── B1Validation.java
+        │   ├── LineCounterBenchmark.java
+        │   ├── SearchGrowthBenchmark.java
+        │   ├── Assignment5_PartB_B1_Report.pdf
+        │   ├── PassStore_output.txt
+        │   ├── B1Validation_output.txt
+        │   ├── buffering_benchmark.txt
+        │   ├── search_growth_benchmark.txt
+        │   └── measurements.csv
         │
-        ├── TASK A2 – DON’T READ WHAT YOU DON’T NEED/
+        ├── TASK B2 – ENGINEER AN ADVERSARIAL INPUT/
         │   ├── README.md
-        │   ├── Assignment5_PartA_TaskA2_Report.pdf
-        │   └── TaskA2_Pseudocode.txt
+        │   ├── B2AdversarialTest.java
+        │   ├── B2DamagedFileTest.java
+        │   ├── Assignment5_PartB_B2_Report.pdf
+        │   ├── create_test_database.sql
+        │   ├── damaged_passes.csv
+        │   ├── compile_check.txt
+        │   └── expected_run.txt
         │
-        ├── TASK A3 – DISCOVER THE DATA-ACCESS DESIGN PATTERN/
+        ├── TASK B3 – STATEMENT vs PREPAREDSTATEMENT vs BATCH/
         │   ├── README.md
-        │   ├── Assignment5_PartA_TaskA3_Report.pdf
-        │   └── TaskA3_DAO_Design.txt
+        │   ├── B3Runner.java
+        │   ├── PassLoader.java
+        │   ├── Assignment5_PartB_B3_Report.pdf
+        │   ├── create_database_and_table.sql
+        │   ├── generated_data_notes.txt
+        │   └── compile_check.txt
         │
-        ├── TASK A4 – WHAT SHOULD BE SERIALIZED?/
-        │   ├── README.md
-        │   ├── Assignment5_PartA_TaskA4_Report.pdf
-        │   └── TaskA4_Serialization_Design.txt
-        │
-        └── TASK A5 – DESIGN FOR CORRECTNESS AND SAFETY/
+        └── TASK B4 – FINAL ENGINEERING DECISION/
             ├── README.md
-            ├── Assignment5_PartA_TaskA5_Report.pdf
-            └── TaskA5_Pseudocode.txt
+            ├── B4Migration.java
+            ├── Assignment5_PartB_B4_Report.pdf
+            ├── create_database_and_table.sql
+            └── passes_b4.csv
 ```
 
-*Note: This structure reflects the actual main files listed in the Part A repository folders.*
+*Note: The structure lists the main files identified in the repository. Additional output, input, library and compiled files may be created during execution.*
 
-## 6. Design and Analysis Methodology
+## 6. Compilation and Execution
 
-Each task follows a structured problem-solving approach:
+The programs can be compiled and executed using the Java Development Kit through Visual Studio Code, Command Prompt or PowerShell.
 
-1. **Problem Understanding:** Identify the real-world scenario and its persistence or database requirements.
-2. **Design Analysis:** Identify suitable file formats, storage strategies, data-access mechanisms or transaction techniques.
-3. **Pseudocode Development:** Prepare algorithmic steps for the required operations.
-4. **Alternative Comparison:** Evaluate alternative approaches based on efficiency, reliability, memory usage and maintainability.
-5. **Complexity Analysis:** Compare the proposed designs using appropriate time and space complexity.
-6. **Documentation:** Present the final design decisions, reasoning and conclusions in the task reports.
+### General execution procedure
 
-## 7. Important Submission Notes
+1. Open the required task folder.
+2. Check the installed Java version.
+3. Ensure that required input files and folders are available.
+4. Set up the database if the task requires JDBC.
+5. Add the appropriate JDBC driver to the classpath.
+6. Configure database credentials using environment variables.
+7. Compile the required Java source files.
+8. Execute the main class.
+9. Verify the program output and generated files.
+10. Record actual benchmark measurements and capture screenshots.
 
-- Part A requires algorithmic pseudocode and design reasoning.
-- Do not replace the requested pseudocode with complete Java source code.
-- Keep the PDF reports and editable pseudocode/design files in their respective task folders.
-- The task reports intentionally exclude student-identifying details.
-- Each task should be committed separately to GitHub where progressive commits are required.
-- Maintain the original task-folder structure for submission.
+### Check Java version
 
-### Java Version and Execution
+```bash
+java -version
+javac -version
+```
 
-Java execution is not applicable to these five Part A tasks because their deliverables are design documents, pseudocode and analytical reports.
+### General Java execution
 
-The implementation requirements and Java execution evidence belong to the corresponding implementation work in Part B.
+```bash
+javac FileName.java
+java ClassName
+```
 
-## 8. Learning Outcomes
+### Windows JDBC classpath example
 
-Through Part A of this assignment, the following learning outcomes were addressed:
+```powershell
+javac -cp "lib\mysql-connector-j.jar" -d output src\MainClass.java
+java -cp "output;lib\mysql-connector-j.jar" MainClass
+```
 
-- Designing efficient and structured persistence formats.
-- Understanding text and binary file storage.
-- Applying buffered reading strategies.
-- Analysing I/O performance and memory consumption.
-- Understanding reusable DAO-based database architecture.
-- Separating database-access logic from application logic.
-- Designing object serialization strategies.
-- Managing transient and persistent object data.
-- Understanding serialization compatibility.
-- Designing database transactions for reliable data updates.
-- Applying commit and rollback operations.
-- Identifying and preventing SQL injection vulnerabilities.
-- Comparing persistence approaches using time and space complexity.
-- Developing structured technical documentation and pseudocode.
+For Linux and macOS, use `:` instead of `;` in the classpath.
 
-## 9. Conclusion
+## 7. Experimental Investigation and Performance Analysis
 
-Part A of Assignment 5 provides a strong foundation in persistence design and database architecture using Java.
+Experimental investigation is an important component of Part B.
 
-Across the five tasks, different methods of storing, retrieving and managing application data are analysed, including structured text files, binary storage, buffered input, DAO architecture and object serialization.
+The tasks examine the behaviour of file operations and database insertion techniques using different workloads.
 
-The final task focuses on database correctness and security through transaction management and SQL injection prevention.
+The main performance and correctness factors include:
 
-Overall, this part strengthens the understanding of persistent data management, efficient file processing, reusable database architecture, serialization compatibility, transaction safety and secure database programming.
+- File-reading performance.
+- Buffering efficiency.
+- Search performance as the number of records increases.
+- SQL execution overhead.
+- PreparedStatement reuse.
+- Batch insertion performance.
+- Database transaction behaviour.
+- Rollback and data consistency.
+- Validation and rejected-record counts.
+- Memory consumption.
+- Scalability and production suitability.
+
+Benchmark measurements depend on hardware, JVM, database configuration, JDBC driver version, indexes and system load.
+
+Use measurements collected on the submission computer when reporting experimental results. Reference outputs are not substitutes for actual execution evidence.
+
+## 8. Testing and Validation
+
+The programs include different tests to evaluate implementation correctness and database reliability.
+
+The main validation areas include:
+
+- File-store operations.
+- Valid and invalid bus-pass records.
+- Damaged CSV records.
+- SQL injection using controlled adversarial input.
+- PreparedStatement rejection of malicious login input.
+- Statement and PreparedStatement insertion.
+- Batch insertion and row-count verification.
+- Transaction rollback after invalid data.
+- Database metadata inspection.
+- Bulk migration of accepted records.
+- Duplicate-record prevention.
+- Validation-failure reporting.
+- Final committed-record verification.
+
+## 9. Learning Outcomes
+
+Through Part B of Assignment 5, the following learning outcomes were addressed:
+
+- Implementing file-based persistence systems.
+- Measuring file-reading and searching performance.
+- Developing robust input-validation mechanisms.
+- Understanding SQL injection through controlled testing.
+- Applying PreparedStatement for secure SQL operations.
+- Implementing JDBC database operations.
+- Comparing different SQL execution approaches.
+- Understanding batch insertion and transaction management.
+- Applying commit and rollback for data consistency.
+- Inspecting database metadata.
+- Processing large CSV datasets.
+- Developing transactional migration applications.
+- Evaluating database architecture for multi-campus systems.
+- Making engineering decisions using experimental results.
+
+## 10. Conclusion
+
+Part B of Assignment 5 provides practical experience in implementing and evaluating persistence systems and database operations using Java.
+
+Across the four tasks, the assignment progresses from file-store implementation and performance instrumentation to adversarial-input testing, JDBC insertion comparisons and large-scale database migration.
+
+The experiments demonstrate the importance of buffered file processing, secure parameterized SQL, efficient batch insertion, transaction management and reliable data validation.
+
+The final engineering decision evaluates the suitability of a shared relational database for a multi-campus bus-pass management system based on concurrency, searching, integrity and maintainability requirements.
+
+Overall, Part B strengthens the understanding of Java file handling, JDBC, database security, performance benchmarking, transaction safety and practical software engineering decisions.
 
 ---
 
 **Course:** CSA0919 – Programming in Java  
-**Assignment:** 5 – Part A: Persistence Design & Pseudocode  
+**Assignment:** 5 – Part B: Implementation & Experimental Investigation  
 **Student:** Juhi Surin  
 **Register Number:** 192525148
